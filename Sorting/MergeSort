@@ -1,0 +1,66 @@
+import java.util.*;
+
+class Main {
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int[] a = new int[n];
+
+        for(int i = 0; i < n; i++) {
+            a[i] = sc.nextInt();
+        }
+
+        System.out.print("Before sorting: ");
+        for(int x : a) {
+            System.out.print(x + " ");
+        }
+
+        System.out.println();
+
+        Merge(a, 0, n - 1);
+
+        System.out.print("After sorting: ");
+        for(int x : a) {
+            System.out.print(x + " ");
+        }
+    }
+
+    public static void Merge(int[] a, int low, int high) {
+
+        if(low >= high) {
+            return;
+        }
+
+        int mid = low + (high - low) / 2;
+
+        Merge(a, low, mid);
+        Merge(a, mid + 1, high);
+
+        MergeSort(a, low, mid, high);
+    }
+
+    public static void MergeSort(int[] a, int low, int mid, int high) {
+
+        int[] temp = new int[high - low + 1];
+        int left = low;
+        int right = mid + 1;
+        int k = 0;
+        while(left <= mid && right <= high) {
+            if(a[left] <= a[right]) {
+                temp[k++] = a[left++];
+            } else {
+                temp[k++] = a[right++];
+            }
+        }
+        while(left <= mid) {
+            temp[k++] = a[left++];
+        }
+        while(right <= high) {
+            temp[k++] = a[right++];
+        }
+        for(int i = 0; i < temp.length; i++) {
+            a[low + i] = temp[i];
+        }
+    }
+}
