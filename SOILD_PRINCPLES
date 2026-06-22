@@ -1,129 +1,67 @@
-SOLID Principles
-Definition
-SOLID is a set of five object-oriented design principles introduced by Robert C. Martin to make software:
-•	Maintainable 
-•	Flexible 
-•	Scalable 
-•	Reusable 
-•	Easy to test 
-________________________________________
-S – Single Responsibility Principle (SRP)
-Definition
+# 📘 SOLID Principles in Java
+
+A complete guide to SOLID Principles with definitions, benefits, examples, violations, corrections, and interview notes.
+
+---
+
+# What is SOLID?
+
+SOLID is a set of five Object-Oriented Design Principles introduced by Robert C. Martin (Uncle Bob) to create software that is:
+
+* Maintainable
+* Flexible
+* Scalable
+* Reusable
+* Easy to Test
+
+---
+
+# SOLID Overview
+
+| Principle | Full Form                       | Key Idea                           |
+| --------- | ------------------------------- | ---------------------------------- |
+| S         | Single Responsibility Principle | One class → One responsibility     |
+| O         | Open Closed Principle           | Extend without modifying           |
+| L         | Liskov Substitution Principle   | Child should replace parent safely |
+| I         | Interface Segregation Principle | Small focused interfaces           |
+| D         | Dependency Inversion Principle  | Depend on abstractions             |
+
+## Memory Trick
+
+```text
+S → One Job
+
+O → Extend, Don't Modify
+
+L → Child = Parent Behavior
+
+I → Small Interfaces
+
+D → Depend on Abstractions
+```
+
+---
+
+# 1. Single Responsibility Principle (SRP)
+
+## Definition
+
 A class should have only one responsibility and one reason to change.
-Benefits
-•	Easy maintenance 
-•	Low coupling 
-•	Better testing 
-•	Improved readability 
-Example
-Wrong:
-Book
- ├─ Store Book Data
- ├─ Print Book
- └─ Save Book
-Correct:
-Book
- └─ Store Book Data
 
-BookPrinter
- └─ Print Book
+### Benefits
 
-BookRepository
- └─ Save Book
-________________________________________
-O – Open/Closed Principle (OCP)
-Definition
-Software entities should be:
-•	Open for Extension 
-•	Closed for Modification 
-Benefits
-•	Prevents bugs in existing code 
-•	Easy feature addition 
-•	Better maintainability 
-Structure
-         Shape
-            ▲
-     ┌──────┴──────┐
-     │             │
-   Circle      Rectangle
-New shapes can be added without modifying existing code.
-________________________________________
-L – Liskov Substitution Principle (LSP)
-Definition
-A subclass should be able to replace its parent class without affecting program correctness.
-Structure
-        Vehicle
-            ▲
-      ┌─────┴─────┐
-      │           │
-     Car        Bike
-Any place using Vehicle should work correctly with Car or Bike.
-Violation
-Bird
- └─ Fly()
+* Better readability
+* Easier maintenance
+* Low coupling
+* Better testing
 
-Penguin
- └─ Cannot Fly ❌
-________________________________________
-I – Interface Segregation Principle (ISP)
-Definition
-Clients should not be forced to implement methods they don't need.
-Wrong Structure
-Worker
- ├─ Work()
- ├─ Eat()
- └─ Sleep()
-Correct Structure
-Workable
- └─ Work()
+---
 
-Eatable
- └─ Eat()
+## ❌ Violation
 
-Sleepable
- └─ Sleep()
-Classes implement only required interfaces.
-________________________________________
-D – Dependency Inversion Principle (DIP)
-Definition
-High-level modules should depend on abstractions, not concrete implementations.
-Wrong Structure
-OrderService
-      │
-      ▼
- MySQLDatabase
-Correct Structure
-OrderService
-      │
-      ▼
- Database Interface
-      ▲
- ┌────┴────┐
- │         │
-MySQL   MongoDB
-Benefits
-•	Loose coupling 
-•	Easy testing 
-•	Easy database replacement 
-________________________________________
-Summary Table
-Principle	Key Idea
-SRP	One class → One responsibility
-OCP	Extend without modifying
-LSP	Child should replace parent safely
-ISP	Small focused interfaces
-DIP	Depend on abstractions
-Mnemonic: S O L I D
-•	S → Single Responsibility 
-•	O → Open/Closed 
-•	L → Liskov Substitution 
-•	I → Interface Segregation 
-•	D → Dependency Inversion 
-Source material based on the uploaded SOLID guide. 
-
-1. Single Responsibility Principle (SRP)
-❌ Violation
+```java
 class Employee {
+
     private String name;
     private double salary;
 
@@ -140,10 +78,25 @@ class Employee {
         System.out.println("Employee saved to DB");
     }
 }
-Problem: Employee handles both salary calculation and database operations.
-________________________________________
-✅ Correct
+```
+
+### Problem
+
+Employee class handles:
+
+* Employee data
+* Salary calculation
+* Database operations
+
+Multiple responsibilities violate SRP.
+
+---
+
+## ✅ Correct Implementation
+
+```java
 class Employee {
+
     private String name;
     private double salary;
 
@@ -158,19 +111,46 @@ class Employee {
 }
 
 class SalaryCalculator {
+
     public void calculate(Employee emp) {
         System.out.println("Salary: " + emp.getSalary());
     }
 }
 
 class EmployeeRepository {
+
     public void save(Employee emp) {
         System.out.println("Employee saved to DB");
     }
 }
-________________________________________
-2. Open/Closed Principle (OCP)
-❌ Violation
+```
+
+### Structure
+
+```text
+Employee
+   │
+   ├── SalaryCalculator
+   │
+   └── EmployeeRepository
+```
+
+---
+
+# 2. Open Closed Principle (OCP)
+
+## Definition
+
+Software entities should be:
+
+* Open for Extension
+* Closed for Modification
+
+---
+
+## ❌ Violation
+
+```java
 class PaymentService {
 
     public void processPayment(String type) {
@@ -183,51 +163,101 @@ class PaymentService {
         }
     }
 }
+```
+
+### Problem
+
 Adding a new payment method requires modifying existing code.
-________________________________________
-✅ Correct
+
+---
+
+## ✅ Correct Implementation
+
+```java
 interface Payment {
     void pay();
 }
 
 class CreditCardPayment implements Payment {
+
     public void pay() {
         System.out.println("Credit Card Payment");
     }
 }
 
 class UpiPayment implements Payment {
+
     public void pay() {
         System.out.println("UPI Payment");
     }
 }
 
 class PaymentService {
+
     public void processPayment(Payment payment) {
         payment.pay();
     }
 }
-Usage
+```
+
+### Usage
+
+```java
 PaymentService service = new PaymentService();
+
 service.processPayment(new UpiPayment());
-________________________________________
-3. Liskov Substitution Principle (LSP)
-❌ Violation
+```
+
+### Structure
+
+```text
+          Payment
+             ▲
+     ┌───────┴───────┐
+     │               │
+CreditCard      UpiPayment
+```
+
+---
+
+# 3. Liskov Substitution Principle (LSP)
+
+## Definition
+
+A subclass should be able to replace its parent class without affecting program correctness.
+
+---
+
+## ❌ Violation
+
+```java
 class Bird {
+
     public void fly() {
         System.out.println("Flying");
     }
 }
 
 class Penguin extends Bird {
+
     @Override
     public void fly() {
         throw new UnsupportedOperationException();
     }
 }
-Penguin cannot properly replace Bird.
-________________________________________
-✅ Correct
+```
+
+### Problem
+
+Penguin cannot fly but inherits fly().
+
+This breaks LSP.
+
+---
+
+## ✅ Correct Implementation
+
+```java
 interface Bird {
     void eat();
 }
@@ -253,11 +283,38 @@ class Penguin implements Bird {
         System.out.println("Eating");
     }
 }
-________________________________________
-4. Interface Segregation Principle (ISP)
-❌ Violation
+```
+
+### Structure
+
+```text
+            Bird
+              ▲
+       ┌──────┴──────┐
+       │             │
+ Penguin       FlyingBird
+                    ▲
+                    │
+                 Sparrow
+```
+
+---
+
+# 4. Interface Segregation Principle (ISP)
+
+## Definition
+
+Clients should not be forced to implement methods they don't need.
+
+---
+
+## ❌ Violation
+
+```java
 interface Worker {
+
     void work();
+
     void eat();
 }
 
@@ -271,9 +328,17 @@ class Robot implements Worker {
         throw new UnsupportedOperationException();
     }
 }
-Robot is forced to implement eat().
-________________________________________
-✅ Correct
+```
+
+### Problem
+
+Robot does not eat but is forced to implement eat().
+
+---
+
+## ✅ Correct Implementation
+
+```java
 interface Workable {
     void work();
 }
@@ -299,9 +364,37 @@ class Robot implements Workable {
         System.out.println("Robot Working");
     }
 }
-________________________________________
-5. Dependency Inversion Principle (DIP)
-❌ Violation
+```
+
+### Structure
+
+```text
+Workable
+   ▲
+   │
+ ┌─┴────┐
+ │      │
+Human  Robot
+
+Eatable
+   ▲
+   │
+Human
+```
+
+---
+
+# 5. Dependency Inversion Principle (DIP)
+
+## Definition
+
+High-level modules should depend on abstractions rather than concrete implementations.
+
+---
+
+## ❌ Violation
+
+```java
 class MySQLDatabase {
 
     public void connect() {
@@ -317,9 +410,17 @@ class UserService {
         db.connect();
     }
 }
-UserService is tightly coupled to MySQL.
-________________________________________
-✅ Correct
+```
+
+### Problem
+
+UserService is tightly coupled with MySQL.
+
+---
+
+## ✅ Correct Implementation
+
+```java
 interface Database {
     void connect();
 }
@@ -347,28 +448,129 @@ class UserService {
     }
 
     public void saveUser() {
+
         database.connect();
+
         System.out.println("User Saved");
     }
 }
-Usage
+```
+
+### Usage
+
+```java
 Database db = new MySQLDatabase();
 
 UserService service = new UserService(db);
 
 service.saveUser();
-________________________________________
-Interview Summary
-Principle	One Line
-SRP	One class should have one responsibility
-OCP	Open for extension, closed for modification
-LSP	Child class should replace parent without breaking behavior
-ISP	Don't force classes to implement unnecessary methods
-DIP	Depend on interfaces, not concrete classes
-Easy Memory Trick
-S → One Job
-O → Extend, Don't Modify
-L → Child = Parent Behavior
-I → Small Interfaces
-D → Depend on Abstractions
+```
 
+### Structure
+
+```text
+        UserService
+             │
+             ▼
+         Database
+             ▲
+      ┌──────┴──────┐
+      │             │
+   MySQL        MongoDB
+```
+
+---
+
+# Real-World Examples
+
+| Principle | Example                                                             |
+| --------- | ------------------------------------------------------------------- |
+| SRP       | Employee Data, Salary Calculation and Database Operations separated |
+| OCP       | Add Google Pay without modifying existing code                      |
+| LSP       | Car and Bike can replace Vehicle                                    |
+| ISP       | Robot shouldn't implement Eat()                                     |
+| DIP       | Spring Boot Services depend on Repository Interfaces                |
+
+---
+
+# Interview Questions
+
+### What is SOLID?
+
+SOLID is a set of five object-oriented design principles used to create maintainable, scalable, flexible, and testable software.
+
+### Which SOLID principle is most used in Spring Boot?
+
+* Dependency Inversion Principle (DIP)
+* Open Closed Principle (OCP)
+
+Examples:
+
+* Dependency Injection
+* Constructor Injection
+* Repository Interfaces
+
+### Difference Between SRP and ISP
+
+| SRP                                 | ISP                     |
+| ----------------------------------- | ----------------------- |
+| Focuses on Classes                  | Focuses on Interfaces   |
+| One Responsibility                  | Small Interfaces        |
+| Prevents Multiple Reasons to Change | Prevents Unused Methods |
+
+### Why is DIP important?
+
+* Loose Coupling
+* Easier Testing
+* Better Maintainability
+* Easy Implementation Replacement
+
+---
+
+# Quick Revision
+
+```text
+S → One class = One responsibility
+
+O → Extend without modifying
+
+L → Child should replace parent safely
+
+I → Small focused interfaces
+
+D → Depend on abstractions
+```
+
+---
+
+# Repository Structure
+
+```text
+SOLID-Principles-Java/
+│
+├── README.md
+│
+├── SRP/
+│   ├── WrongExample.java
+│   └── CorrectExample.java
+│
+├── OCP/
+│   ├── WrongExample.java
+│   └── CorrectExample.java
+│
+├── LSP/
+│   ├── WrongExample.java
+│   └── CorrectExample.java
+│
+├── ISP/
+│   ├── WrongExample.java
+│   └── CorrectExample.java
+│
+└── DIP/
+    ├── WrongExample.java
+    └── CorrectExample.java
+```
+
+## Author
+
+Created for Java OOP, Spring Boot, and Interview Preparation.
