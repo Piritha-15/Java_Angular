@@ -1,0 +1,8 @@
+{
+    "java.project.sourcePaths": [
+        "MODULE 1/Singleton_Pattern",
+        "MODULE 1"
+    ],
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive"
+}
