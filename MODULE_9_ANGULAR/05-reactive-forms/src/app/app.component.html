@@ -1,0 +1,8 @@
+<form [formGroup]="enrollForm" (ngSubmit)="onSubmit()">
+  <input formControlName="studentName" placeholder="Name">
+  <input formControlName="studentEmail" placeholder="Email">
+  <input formControlName="courseId" type="number" placeholder="Course ID">
+  <select formControlName="preferredSemester"><option>Odd</option><option>Even</option></select>
+  <label><input type="checkbox" formControlName="agreeToTerms"> Agree</label>
+  <button [disabled]="enrollForm.invalid">Submit</button>
+</form>
