@@ -18,3 +18,5 @@ WEEK 4
 WEEK 5
 --- JAVA angular and React
 
+WEEK 6
+---ANGULAR AND GIT
